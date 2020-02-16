@@ -9,7 +9,7 @@ BUFSITZ = 512
 
 HOST = 'localhost'
 PORT = 32000
-persons__ = []
+persons = []
 ADDR = (HOST, PORT)
 MAX_CONNECTION = 5
 SERVER = socket(AF_INET, SOCK_STREAM)
@@ -19,22 +19,22 @@ SERVER.bind(ADDR)
 def broadcast(msg, name):
     for person in persons:
         client = person.client
-        client.send(bytes(name + "" + "utf-8") + msg)
+        client.send(bytes(name + "" , "utf8") + msg)
 
 
 def client_komonikasi(person):
     client = person.client
 
-    name = client.recv(BUFSITZ).decode("utf-8")
-    msg = f"{name} has joined the chat "
-    broadcast(msg)
+    name = client.recv(BUFSITZ).decode("utf8")
+    msg = bytes(f"{name} has joined the chat ", "utf8")
+    broadcast(msg, name)
     while True:
         try:
             msg = client.recv(BUFSITZ)
-            print(f"{name}: ", msg.decode("utf-8"))
-            if msg == bytes("{quit}", "utf-8"):
+            print(f"{name}: ", msg.decode("utf8"))
+            if msg == bytes("{quit}", "utf8"):
                 broadcast(f"{name} sudah meninggalkan Obrolan", "")
-                client.send(bytes("{quit}", "utf-8"))
+                client.send(bytes("{quit}", "utf8"))
                 client.close()
 
                 persons.remove(person)
@@ -57,7 +57,7 @@ def Menunggu_koneksi(self):
             person = Person(addr, client)
             persons.append(person)
             print(f"[Connection] {addr} koneksi ke dalam server pada waktu{time.time()}")
-            Thread(target=client_komonikasi, args=(client,)).start()
+            Thread(target=client_komonikasi, args=(person,)).start()
         except Exception as e:
             print("[EXCEPTION]", e)
             run = False
