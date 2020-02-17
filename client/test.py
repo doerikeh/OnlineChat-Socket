@@ -1,36 +1,37 @@
-from socket import AF_INET, SOCK_STREAM, socket
+from client import Clinet
+import time
 from threading import Thread
 
-HOST = 'localhost'
-PORT = 32000
+c1 = Clinet("Tim")
+c2 = Clinet("ike")
 
-ADDR = (HOST, PORT)
-BUFSITZ = 512
 
-messages = []
-client_socket = socket(AF_INET, SOCK_STREAM)
-client_socket.connect(ADDR)
 
-def receive_message():
-    while True:
-        try:
-            msg = client_socket.recv(BUFSITZ).decode()
-            messages.append(msg)
+def update_pesan():
+    msgs = []
+    run = True
+    while run:
+        time.sleep(1)
+        new_pesan = c1.get_messages()
+        msgs.extend(new_pesan)
+        for msg in new_pesan:
             print(msg)
-        except Exception as e:
-            print("[EXCEPTION]", e)
-            break
+            if msg == "{quit}":
+                run = False
+                break
 
 
-def send_messages(msg):
-    client_socket.send(bytes(msg, encoding='utf8'))
-    if msg == "{quit}":
-        client_socket.close()
+Thread(target=update_pesan).start()
+
+c1.send_messages("hai")
+c2.send_messages("hai juga")
+time.sleep(1)
+c1.send_messages("Ada Apa nih")
+time.sleep(2)
+c2.send_messages("ada berita baru")
 
 
-receive_thread = Thread(target=receive_message)
-receive_thread.start()
-
-
-send_messages("Ike")
-send_messages("hello")
+c1.disconnected()
+time.sleep(2)
+c2.disconnected()
+time.sleep(2)

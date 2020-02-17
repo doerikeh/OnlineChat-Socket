@@ -19,28 +19,30 @@ SERVER.bind(ADDR)
 def broadcast(msg, name):
     for person in persons:
         client = person.client
-        client.send(bytes(name + "" , "utf8") + msg)
+        client.send(bytes(name, "utf8") + msg)
 
 
 def client_komonikasi(person):
     client = person.client
 
     name = client.recv(BUFSITZ).decode("utf8")
+    person.set_name(name)
     msg = bytes(f"{name} has joined the chat ", "utf8")
-    broadcast(msg, name)
+    broadcast(msg, "")
     while True:
         try:
             msg = client.recv(BUFSITZ)
-            print(f"{name}: ", msg.decode("utf8"))
+            
             if msg == bytes("{quit}", "utf8"):
-                broadcast(f"{name} sudah meninggalkan Obrolan", "")
                 client.send(bytes("{quit}", "utf8"))
                 client.close()
-
+                broadcast(bytes(f"{name} sudah meninggalkan Obrolan", "utf8"), "")
                 persons.remove(person)
+                print(f"[DISCONNECTED] {name} disconnected")
                 break
             else:
-                client.send(msg, name)
+                broadcast(msg, name + ': ')
+                print(f"{name}: ", msg.decode("utf8"))
         except Exception as e:
             print("[EXCEPTION]", e)
             break
@@ -50,8 +52,7 @@ def client_komonikasi(person):
 
 
 def Menunggu_koneksi(self):
-    run = True
-    while run:
+    while True:
         try:
             client, addr = SERVER.accept()
             person = Person(addr, client)
@@ -60,7 +61,7 @@ def Menunggu_koneksi(self):
             Thread(target=client_komonikasi, args=(person,)).start()
         except Exception as e:
             print("[EXCEPTION]", e)
-            run = False
+            break
     print("Server Rusak")
 
 
