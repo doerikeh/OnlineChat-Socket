@@ -4,7 +4,6 @@ import time
 from person import Person
 
 
-
 BUFSITZ = 512
 
 HOST = 'localhost'
