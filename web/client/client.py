@@ -32,9 +32,15 @@ class Clinet:
                 break
                 
     def send_messages(self, msg):
-        self.client_socket.send(bytes(msg, 'utf8'))
-        if msg == "{quit}":
-            self.client_socket.close()
+        try:
+            self.client_socket.send(bytes(msg, 'utf8'))
+            if msg == "{quit}":
+                self.client_socket.close()
+        except Exception as e: 
+            self.client_socket = socket(AF_INET, SOCK_STREAM)
+            self.client_socket.connect(self.ADDR)
+            print(e)
+
 
     def get_messages(self):
 

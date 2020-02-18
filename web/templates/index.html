@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 
 {% block title %}Home{% endblock %}
+<!-- 
+{% if login %}
+{% block messsage %}{{session["name"]}}selamat anda sudah login{% endblock %}
+{% endif %} -->
+
 
 {% block content %}
+<p id="test"></p>
     <h1>Chat App</h1>
-    <button id="test" type="button" class="btn btn-outline-primary">Primary</button>
-    
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Send Message" aria-label="Message" id="msg">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="sendBtn">Send</button>
+        </div>
+      </div>    
 {% endblock %}
