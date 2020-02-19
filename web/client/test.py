@@ -2,8 +2,8 @@ from client import Clinet
 import time
 from threading import Thread
 
-c1 = Clinet("Tim")
-c2 = Clinet("ike")
+c1 = Clinet("")
+c2 = Clinet("")
 
 
 

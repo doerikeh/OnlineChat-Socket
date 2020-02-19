@@ -26,7 +26,7 @@ def login():
         print(request.form)
         session[NAME_KEY] = request.form["inputName"]
         return redirect(url_for("home"))
-    return render_template("login.html", **{ "session":"session"})
+    return render_template("login.html", **{ "session":session})
 
 @app.route("/logout")
 def logout():
